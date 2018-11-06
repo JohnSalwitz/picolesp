@@ -1,0 +1,40 @@
+#!/usr/bin/env picol
+
+# Runs Output for X Seconds
+# Note... this is blocking
+digitalout relaypin HIGH
+sleepsec 2
+
+
+# This could be an idle script (loaded if no return from server)
+digitalout relaypin LOW
+sleepsec 1
+
+
+# This checks to see if motion in box... (idle script)
+set pin [digitalread pripin]
+if {$pin == 1} {
+	publish "CAT-IN-BOX"
+	sleepmin 8
+}
+
+
+# idle script that turns fan on if idle too long (20 minutes)
+# used in catbox
+set idletimer [eval idletimer + 1]
+if {$idletimer > 20*60} {
+	digitalout relaypin HIGH
+	sleepmin 8
+	set idletimer 0
+}
+digitalout relaypin LOW
+sleepsec 1
+
+
+# idle script that will turn off fan if not "goosed" after 20 seconds
+# used in garage
+set idletimer [eval idletimer + 1]
+if {$idletimer == 20} {
+	digitalout relaypin LOW
+}
+sleepsec 1
