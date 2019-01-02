@@ -38,7 +38,7 @@
 #define PICOL_FEATURE_INTERP    1
 #define PICOL_FEATURE_IO        1
 #define PICOL_FEATURE_PUTS      1
-#define PICOL_FEATURE_DEBUG    1
+#define PICOL_FEATURE_DEBUG		1
 
 #endif /* PICOL_CONFIGURATION */
 
@@ -182,7 +182,7 @@
 #define SUBCMD(x)         (EQ(argv[1], x))
 
 enum {
-    PICOL_OK, PICOL_ERR, PICOL_RETURN, PICOL_BREAK, PICOL_CONTINUE, PICOL_YIELD
+    PICOL_OK, PICOL_ERR, PICOL_RETURN, PICOL_BREAK, PICOL_CONTINUE
 };
 enum {
     PICOL_PT_ESC, PICOL_PT_STR, PICOL_PT_CMD, PICOL_PT_VAR, PICOL_PT_SEP,
@@ -250,11 +250,6 @@ typedef struct picolArray {
     picolVar *table[PICOL_ARR_BUCKETS];
     int size;
 } picolArray;
-
-// for reentrant code... this saves the last state before leaving parser...  (won't work with whiles!)
-#ifdef PICOL_REENTRANT
-static picolParser _parser_save;
-#endif
 
 /* Ease of use macros. */
 
@@ -505,7 +500,7 @@ int picol_InNi(picolInterp *interp, int argc, char **argv, void *pd);
 
 
 #if PICOL_FEATURE_IO
-int picolIsDirectory(char *path);     // jfs
+int picolIsDirectory(char *path);  		// jfs
 #endif
 
 int picolIsInt(char *str);
@@ -1109,7 +1104,7 @@ void picolEscape(char *str) {
                     *cp2++ = '\t';
                     cp++;
                     break;
-        // jfs: hex conversion
+				// jfs: hex conversion
 #ifndef ARDUINO
                 case 'x':
                     sscanf(cp + 2, "%x", (unsigned int *) &ichar);
@@ -1169,33 +1164,16 @@ size_t picolExpandLC(char *destination, char *source, size_t num) {
 #define PICOL_EVAL_BUF_SIZE (PICOL_MAX_STR*2)
 
 int picolEval2(picolInterp *interp, char *t, int mode) { /*------------ EVAL! */
-    /* mode==0: subst only, mode==1: full eval mode==2 resume from yield (full eval)*/
+    /* mode==0: subst only, mode==1: full eval */
+    picolParser p;
     int argc = 0, j;
     char **argv = NULL;
     char buf[PICOL_EVAL_BUF_SIZE];
     int rc = PICOL_OK;
-  picolParser p;
-
-#ifndef PICOL_REENTRANT
-   picolSetResult(interp, "");
+    picolSetResult(interp, "");
     picolInitParser(&p, t);
-#else
-  if(mode != 2)
-  {
-      picolSetResult(interp, "");
-    picolInitParser(&p, t);
-  }
-  else
-  {
-    // restore saved parser.
-    p = _parser_save;
-    mode = 1;
-  }
-#endif
-
     while (1) {
         size_t tlen;
-
         int prevtype = p.type;
         picolGetToken(interp, &p);
         if (p.type == PICOL_PT_EOF) {
@@ -1310,11 +1288,6 @@ int picolEval2(picolInterp *interp, char *t, int mode) { /*------------ EVAL! */
                     fflush(stderr);
                 }
 #endif
-#if PICOL_REENTRANT
-        if(rc == PICOL_YIELD) {
-          _parser_save = p;
-        }
-#endif
                 if (rc != PICOL_OK) {
                     goto err;
                 }
@@ -1326,7 +1299,6 @@ int picolEval2(picolInterp *interp, char *t, int mode) { /*------------ EVAL! */
             free(argv);
             argv = NULL;
             argc = 0;
-
             continue;
         }
         /* We have a new token. Append it to the previous or use it as a
@@ -3717,10 +3689,10 @@ COMMAND(puts) {
 }
 #else
 COMMAND(puts) {
-    char buf[PICOL_MAX_STR];
-    ARITY2(argc == 2 || argc == 3, "puts ?size?");
+	char buf[PICOL_MAX_STR];
+	ARITY2(argc == 2 || argc == 3, "puts ?size?");
     sprintf(buf, "%s\n", argv[1]);
-    Serial.println(buf);
+	Serial.println(buf);
     return PICOL_OK;
 }
 #endif
@@ -4371,10 +4343,7 @@ COMMAND(while) {
         }
     }
     return picolSetResult(interp, "");
-} 
-
-
-/* --------------------------------------------------------- Initialization */
+} /* --------------------------------------------------------- Initialization */
 void picolRegisterCoreCmds(picolInterp *interp) {
     int j;
     char *name[] = {
@@ -4454,8 +4423,7 @@ void picolRegisterCoreCmds(picolInterp *interp) {
 #endif
     picolRegisterCmd(interp, "subst", picol_subst, NULL);
     picolRegisterCmd(interp, "switch", picol_switch, NULL);
-#if 0
-  // jfs
+#ifndef ARDUINO
     picolRegisterCmd(interp, "time", picol_time, NULL);
 #endif
     picolRegisterCmd(interp, "try", picol_try, NULL);

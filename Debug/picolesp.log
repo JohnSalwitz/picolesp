@@ -1,0 +1,158 @@
+﻿Build started 11/26/2018 9:50:04 PM.
+     1>Project "E:\GitHub\picolesp\picolesp.vcxproj" on node 2 (ClCompile target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IC:\Users\John\Documents\Arduino\libraries\ArduinoJson /IC:\Users\John\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266 /IC:\Users\John\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\variants\generic /IE:\GitHub\picolesp /IC:\Users\John\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\libraries\ESP8266HTTPClient\src /IC:\Users\John\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\libraries\ESP8266HTTPClient\src\utility /IC:\Users\John\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\libraries\ESP8266WiFi\src /IC:\Users\John\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\libraries\ESP8266WiFi\src\utility /I"C:\Program Files (x86)\Arduino\libraries" /IC:\Users\John\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\libraries /I"C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\zpcystfy.mhg\Micro Platforms\default\debuggers" /IC:\Users\John\Dropbox\SHARE\Elizabeth\_HOBBIES\Arduino\libraries /I"C:\Users\John\AppData\Local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\c++\4.8.2" /I"C:\Users\John\AppData\Local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\c++\4.8.2\xtensa-lx106-elf" /I"C:\Users\John\AppData\Local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include" /I"C:\Users\John\AppData\Local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\lib\gcc\xtensa-lx106-elf\4.8.2\include" /IC:\Users\John\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\tools\sdk\include /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D __ESP8266_ESp8266__ /D __ESP8266_ESP8266__ /D __ets__ /D ICACHE_FLASH /D F_CPU=80000000L /D ARDUINO=187 /D ARDUINO_ESP8266_ESP01 /D ARDUINO_ARCH_ESP8266 /D __cplusplus /D _MBCS /X /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /FIE:\GitHub\picolesp\__vm\.picolesp.vsarduino.h /analyze- /errorReport:prompt source\picol_glue.cpp
+         picol_glue.cpp
+     1>c1xx : warning C4117: macro name '__cplusplus' is reserved, '#define' ignored
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(13): warning C4005: '__ESP8266_ESp8266__' : macro redefinition
+                 command-line arguments :  see previous definition of '__ESP8266_ESp8266__'
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(14): warning C4005: '__ESP8266_ESP8266__' : macro redefinition
+                 command-line arguments :  see previous definition of '__ESP8266_ESP8266__'
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(15): warning C4005: '__ets__' : macro redefinition
+                 command-line arguments :  see previous definition of '__ets__'
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(16): warning C4005: 'ICACHE_FLASH' : macro redefinition
+                 command-line arguments :  see previous definition of 'ICACHE_FLASH'
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(19): warning C4005: 'ARDUINO_ESP8266_ESP01' : macro redefinition
+                 command-line arguments :  see previous definition of 'ARDUINO_ESP8266_ESP01'
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(20): warning C4005: 'ARDUINO_ARCH_ESP8266' : macro redefinition
+                 command-line arguments :  see previous definition of 'ARDUINO_ARCH_ESP8266'
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(21): warning C4117: macro name '__cplusplus' is reserved, '#define' ignored
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(29): warning C4005: '__asm__' : macro redefinition
+                 e:\github\picolesp\__vm\.picolesp.vsarduino.h(24) : see previous definition of '__asm__'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\_ansi.h(90): warning C4005: '_EXFUN' : macro redefinition
+                 e:\github\picolesp\__vm\.picolesp.vsarduino.h(67) : see previous definition of '_EXFUN'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\lib\gcc\xtensa-lx106-elf\4.8.2\include\stddef.h(212): error C2371: 'size_t' : redefinition; different basic types
+                 e:\github\picolesp\predefined c++ types (compiler internal)(19) : see declaration of 'size_t'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\_types.h(74): error C4980: '__value' : use of this keyword requires /clr:oldSyntax command line option
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\_types.h(74): error C2059: syntax error : '__value'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(185): error C2059: syntax error : '('
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(186): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(186): error C2059: syntax error : ')'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(186): error C2143: syntax error : missing ';' before ')'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(186): error C2238: unexpected token(s) preceding ';'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(187): error C2059: syntax error : '('
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(188): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(188): error C2535: 'int __sFILE::_EXFNPTR(_read)' : member function already defined or declared
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(185) : see declaration of '__sFILE::_EXFNPTR'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(188): error C2059: syntax error : ')'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(188): error C2143: syntax error : missing ';' before ')'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(188): error C2238: unexpected token(s) preceding ';'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(189): error C2059: syntax error : '('
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(189): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(189): error C2535: 'int __sFILE::_EXFNPTR(_read)' : member function already defined or declared
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(185) : see declaration of '__sFILE::_EXFNPTR'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(189): error C2059: syntax error : ')'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(189): error C2143: syntax error : missing ';' before ')'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(189): error C2238: unexpected token(s) preceding ';'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(190): error C2059: syntax error : '('
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(190): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(190): error C2535: 'int __sFILE::_EXFNPTR(_read)' : member function already defined or declared
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(185) : see declaration of '__sFILE::_EXFNPTR'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(190): error C2059: syntax error : ')'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(190): error C2143: syntax error : missing ';' before ')'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(190): error C2238: unexpected token(s) preceding ';'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(597): error C2059: syntax error : '('
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(597): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(597): error C2059: syntax error : ')'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(597): error C2143: syntax error : missing ';' before ')'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\sys\reent.h(597): error C2238: unexpected token(s) preceding ';'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\stdlib.h(65): error C2733: 'atexit' : second C linkage of overloaded function not allowed
+                 e:\github\picolesp\predefined c++ types (compiler internal)(33) : see declaration of 'atexit'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\stdint.h(42): error C2371: 'uint8_t' : redefinition; different basic types
+                 e:\github\picolesp\__vm\.picolesp.vsarduino.h(47) : see declaration of 'uint8_t'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\lib\gcc\xtensa-lx106-elf\4.8.2\include\stdarg.h(40): warning C4091: 'typedef ' : ignored on left of 'int' when no variable is declared
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\stdlib_noniso.h(29): error C2733: 'atoi' : second C linkage of overloaded function not allowed
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\stdlib.h(70) : see declaration of 'atoi'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\stdlib_noniso.h(31): error C2733: 'atol' : second C linkage of overloaded function not allowed
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\stdlib.h(72) : see declaration of 'atol'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\stdlib_noniso.h(33): error C2733: 'atof' : second C linkage of overloaded function not allowed
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\stdlib.h(66) : see declaration of 'atof'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\arduino.h(188): error C2371: 'byte' : redefinition; different basic types
+                 e:\github\picolesp\__vm\.picolesp.vsarduino.h(78) : see declaration of 'byte'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\tools\sdk\include\ets_sys.h(69): error C2143: syntax error : missing ')' before ':'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\tools\sdk\include\ets_sys.h(69): error C2059: syntax error : ')'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\tools\sdk\include\ets_sys.h(77): error C2143: syntax error : missing ')' before ':'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\tools\sdk\include\ets_sys.h(77): error C2059: syntax error : ')'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\tools\sdk\include\ets_sys.h(84): error C2143: syntax error : missing ')' before ':'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\tools\sdk\include\ets_sys.h(84): error C2059: syntax error : ')'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\pgmspace.h(18): warning C4005: 'PROGMEM' : macro redefinition
+                 e:\github\picolesp\__vm\.picolesp.vsarduino.h(49) : see previous definition of 'PROGMEM'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\pgmspace.h(20): warning C4005: 'PGM_VOID_P' : macro redefinition
+                 e:\github\picolesp\__vm\.picolesp.vsarduino.h(53) : see previous definition of 'PGM_VOID_P'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\pgmspace.h(33): warning C4091: 'typedef ' : ignored on left of 'void' when no variable is declared
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\wcharacter.h(48): error C2660: 'isalnum' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\wcharacter.h(54): error C2660: 'isalpha' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\wcharacter.h(65): error C2660: 'isblank' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\wcharacter.h(70): error C2660: 'iscntrl' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\wcharacter.h(75): error C2660: 'isdigit' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\wcharacter.h(80): error C2660: 'isgraph' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\wcharacter.h(85): error C2660: 'islower' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\wcharacter.h(90): error C2660: 'isprint' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\wcharacter.h(96): error C2660: 'ispunct' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\wcharacter.h(103): error C2660: 'isspace' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\wcharacter.h(108): error C2660: 'isupper' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\wcharacter.h(114): error C2660: 'isxdigit' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\wcharacter.h(130): error C2660: 'tolower' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\wcharacter.h(135): error C2660: 'toupper' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\print.h(59): error C2660: 'strlen' : function does not take 1 arguments
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(35): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(35): error C2143: syntax error : missing ')' before 'constant'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(35): error C3805: 'constant': unexpected token, expected either '}' or a ','
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(36): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(37): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(38): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(39): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(40): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(41): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(42): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(43): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(44): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(45): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(46): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(47): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(48): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(49): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(50): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(51): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(52): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(53): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(54): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(55): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(56): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(57): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(58): error C2059: syntax error : 'bad suffix on number'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(127): error C2535: 'size_t HardwareSerial::write(uint8_t)' : member function already defined or declared
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(113) : see declaration of 'HardwareSerial::write'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(139): error C2864: 'HardwareSerial::_uart' : only static const integral data members can be initialized within a class
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(140): error C2864: 'HardwareSerial::_peek_char' : only static const integral data members can be initialized within a class
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\hardwareserial.h(75): error C2065: 'SERIAL_8N1' : undeclared identifier
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\esp.h(147): error C2143: syntax error : missing ')' before ':'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\esp.h(147): error C2059: syntax error : ')'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\md5builder.h(34): error C2660: 'strlen' : function does not take 1 arguments
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(92): warning C4005: 'pgm_read_byte' : macro redefinition
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\pgmspace.h(97) : see previous definition of 'pgm_read_byte'
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(93): warning C4005: 'pgm_read_word' : macro redefinition
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\pgmspace.h(106) : see previous definition of 'pgm_read_word'
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(95): warning C4005: 'digitalPinToPort' : macro redefinition
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\arduino.h(223) : see previous definition of 'digitalPinToPort'
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(96): warning C4005: 'digitalPinToBitMask' : macro redefinition
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\arduino.h(224) : see previous definition of 'digitalPinToBitMask'
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(97): warning C4005: 'digitalPinToTimer' : macro redefinition
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\arduino.h(225) : see previous definition of 'digitalPinToTimer'
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(99): warning C4005: 'portOutputRegister' : macro redefinition
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\arduino.h(226) : see previous definition of 'portOutputRegister'
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(100): warning C4005: 'portInputRegister' : macro redefinition
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\arduino.h(227) : see previous definition of 'portInputRegister'
+     1>e:\github\picolesp\__vm\.picolesp.vsarduino.h(101): warning C4005: 'portModeRegister' : macro redefinition
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\cores\esp8266\arduino.h(228) : see previous definition of 'portModeRegister'
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\hardware\esp8266\2.2.0\libraries\esp8266wifi\src\wifiserver.h(45): error C2864: 'WiFiServer::_noDelay' : only static const integral data members can be initialized within a class
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\c++\4.8.2\memory(46): warning C4068: unknown pragma
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\c++\4.8.2\bits\cpp_type_traits.h(35): warning C4068: unknown pragma
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\c++\4.8.2\bits\cpp_type_traits.h(98): error C3630: error when processing the token '__value'
+                 c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\c++\4.8.2\bits\cpp_type_traits.h(100) : see reference to class template instantiation 'std::__traitor<_Sp,_Tp>' being compiled
+     1>c:\users\john\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\xtensa-lx106-elf\include\c++\4.8.2\bits\cpp_type_traits.h(98): fatal error C1190: managed targeted code requires a '/clr' option
+     1>Done Building Project "E:\GitHub\picolesp\picolesp.vcxproj" (ClCompile target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.29
