@@ -31,49 +31,87 @@
 #define PICOL_FEATURE_TIMING	  0
 #define PICOL_REENTRANT         1
 
+
 // Exit is used by picol...
 void exit (int status);
 
 // the interpreter...
 #include "picol.h"
-
-// typedef int (*picol_Func)(struct picolInterp *interp, int argc, char **argv, void *pd);
-
+#include "background_scripts.h"
 
 // tcl binding to Arduino functions
 COMMAND(sleep);
 COMMAND(sleepSec);
 COMMAND(sleepMin);
+COMMAND(setPinMode);
 COMMAND(digitalWrite);
 COMMAND(digitalRead);
+#ifdef PICOL_LED_PIN
+COMMAND(setLED);
+#endif
+#ifdef PICOL_INPUT_PIN
+COMMAND(readPin);
+#endif
+#ifdef PICOL_RELAY
+COMMAND(setRelay);
+#endif
 COMMAND(log);
+COMMAND(publish);
 
+#ifdef PICOL_RELAY
+static byte relON[] = {0xA0, 0x01, 0x01, 0xA2};  //Hex command to send to serial for open relay
+static byte relOFF[] = {0xA0, 0x01, 0x00, 0xA1}; //Hex command to send to serial for close relay
+#endif
 
 void PicolGlueClass::setup()
 {
   	_interpreter = picolCreateInterp();
     _resetState();
-    
-  	picolSetIntVar(_interpreter, "relaypin", 2);
-  	picolSetIntVar(_interpreter, "HIGH", 1);
-  	picolSetIntVar(_interpreter, "LOW", 0);
-  
+ 
   	// used by tcl in idle mode
   	picolSetIntVar(_interpreter, "idleTimer", 0);
   
     picolRegisterCmd(_interpreter, "sleep", picol_sleep, NULL);
     picolRegisterCmd(_interpreter, "sleepsec", picol_sleepSec, NULL);
     picolRegisterCmd(_interpreter, "sleepmin", picol_sleepMin, NULL);
-  
+
+    picolRegisterCmd(_interpreter, "pinmode", picol_setPinMode, NULL);
     picolRegisterCmd(_interpreter, "digitalwrite", picol_digitalWrite, NULL);
     picolRegisterCmd(_interpreter, "digitalread", picol_digitalRead, NULL);
+    
+#ifdef PICOL_LED_PIN
+    picolRegisterCmd(_interpreter, "setled", picol_setLED, NULL);
+#endif   
+#ifdef PICOL_INPUT_PIN 
+    picolRegisterCmd(_interpreter, "readpin", picol_readPin, NULL);
+#endif 
+#ifdef PICOL_RELAY 
+    picolRegisterCmd(_interpreter, "setrelay", picol_setRelay, NULL);
+#endif 
 
     picolRegisterCmd(_interpreter, "log", picol_log, NULL);
+    picolRegisterCmd(_interpreter, "publish", picol_publish, NULL);
+
+// esp/arduino constants
+    picolSetIntVar(_interpreter, "HIGH", 0);
+    picolSetIntVar(_interpreter, "LOW", 1);
+    picolSetIntVar(_interpreter, "OUTPUT", OUTPUT);
+    picolSetIntVar(_interpreter, "INPUT", INPUT);
+      
+#ifdef PICOL_INPUT_PIN
+    picolSetIntVar(_interpreter, "inputpin", PICOL_INPUT_PIN);
+    pinMode(PICOL_INPUT_PIN, INPUT);
+#endif
+
+#ifdef PICOL_LED_PIN
+    picolSetIntVar(_interpreter, "ledpin", PICOL_LED_PIN);
+    pinMode(PICOL_LED_PIN, OUTPUT);
+#endif
     
-    set_background_script("digitalwrite 2 1\nsleepsec 1\ndigitalwrite 2 0\nsleepsec 1\n");
+    set_background_script(default_backgroundScript);
     set_foreground_script("");
     
-  	SerialPrintLn("interp Setup Completed");
+  	SerialPrintLn("Interpreter Setup Completed");
 }
 
 void PicolGlueClass::loop(int deltaTime)
@@ -165,6 +203,18 @@ COMMAND(sleepMin)
 }
 
 // digitalWrite(pin, state)
+COMMAND(setPinMode)
+{
+  uint8_t pin;
+  uint8_t pMode;
+  ARITY2(argc == 3, "pinMode");
+  SCAN_INT(pin, argv[1]);
+  SCAN_INT(pMode, argv[2]);
+  pinMode(pin, pMode);
+  return PICOL_OK;
+}
+
+// digitalWrite(pin, state)
 COMMAND(digitalWrite)
 {
 	uint8_t pin;
@@ -176,15 +226,54 @@ COMMAND(digitalWrite)
 	return PICOL_OK;
 }
 
-// digitalWrite(pin, state)
+// digitalRead(pin)
 COMMAND(digitalRead)
 {
 	uint8_t pin;
-	uint8_t state;
 	ARITY2(argc == 2, "digitalread");
 	SCAN_INT(pin, argv[1]);
   return picolSetIntResult(interp, digitalRead(pin));
 }
+
+#ifdef PICOL_LED_PIN
+// setLED(state)
+COMMAND(setLED)
+{
+  uint8_t state;
+  ARITY2(argc == 2, "setLED");
+  SCAN_INT(state, argv[1]);
+  if(state == 0)
+      digitalWrite(PICOL_LED_PIN, HIGH); 
+  else
+      digitalWrite(PICOL_LED_PIN, LOW); 
+  return PICOL_OK;
+}
+#endif
+
+#ifdef PICOL_INPUT_PIN
+// readPin()
+COMMAND(readPin)
+{
+  ARITY2(argc == 1, "readPin");
+  return picolSetIntResult(interp, digitalRead(PICOL_INPUT_PIN));  
+}
+#endif
+
+
+#ifdef PICOL_RELAY
+// setRelay(state)
+COMMAND(setRelay)
+{
+  uint8_t state;
+  ARITY2(argc == 2, "setRelay");
+  SCAN_INT(state, argv[1]);
+  if(state == 0)
+      Serial.write(relOFF, sizeof(relOFF));      // turns the relay OFF
+  else
+      Serial.write(relON, sizeof(relON));       // turns the relay ON
+  return PICOL_OK;
+}
+#endif
 
 // to do...protect buffers!
 // log(level, message)
@@ -192,6 +281,14 @@ COMMAND(log)
 {
     ARITY2(argc == 3, "log level msg");
     NetworkHandler.PostLog(argv[1], argv[2]);
+    return PICOL_OK;
+}
+
+// Publish a message to the server (triggered by something...)
+COMMAND(publish)
+{
+    ARITY2(argc == 2, "publish msg");
+    NetworkHandler.PostPublish(argv[1]);
     return PICOL_OK;
 }
 

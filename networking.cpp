@@ -7,34 +7,37 @@
 #include <ESP8266WiFiMulti.h> 
 #include <ESP8266HTTPClient.h>
 
-
 #include "debug2.h"
 #include "networking.h"
 
 // Assuming singleton...
 static ESP8266WiFiMulti _wifiMulti;
-StaticJsonBuffer<1024> _jsonBuffer;
-static char _buffer[1024];    
-
-
-
+ 
 /* Set these to your desired credentials. */
 static const char* ssid = "ASUS_2"; //ENTER YOUR WIFI SETTINGS
 static const char* password = "HomeNet2006";
 
-//#define SERVER_URL(_app) "http://poseidon.local:5000/" _app
-#define SERVER_URL(_app) "http://192.168.1.121:5000/" _app
+//#define SERVER_URL(_app) "http://192.168.1.121:5000/" _app
 //#define SERVER_URL(_app) "http://192.168.1.205:5000/" _app
-//define SERVER_URL(_app) "http://raspberrypi:5000/" _app
-static const char * url = SERVER_URL("connect");
-static const char * log_url = SERVER_URL("post_log");
+//#define SERVER_URL(_app) "http://raspberrypi:5000/" _app
+//#define SERVER_URL(_app) "http://poseidon.local:5000/" _app
 
-//Web/Server address to read/write from
-static const char* host = "192.168.1.205";
+//static const char * _connect_url = SERVER_URL("connect");
+//static const char * _log_url = SERVER_URL("post_log");
+//static const char * _publish_url = SERVER_URL("publish");
 
-//static const char * url = "http://192.168.1.205:5000/connect";
-//static const char * url = "http://192.168.1.121:5000/connect";
-//static const char * log_url = "http://192.168.1.121:5000/post_log";
+static const char * _connect_path = "connect";
+static const char * _log_path = "post_log";
+static const char * _publish_path = "publish";
+
+static const char * _mac_key = "mac";
+
+static char *_serverURLS[] =
+{
+   "http://192.168.1.121:5000/",
+   "http://192.168.1.205:5000/",
+   NULL
+};
 
 static char *_logLevelnames[LogLevelType::count] =
 {
@@ -45,25 +48,52 @@ static char *_logLevelnames[LogLevelType::count] =
 };
 
 
+static const int _serverMissMax = 10;
+
+// Ram...
+static char _buffer[1024];  
+static char _buffer2[1024];
+
 // Forward...
 static void _ClearJSONBuffer();
 
 networking::networking(void)
 {
-    m_isConnected = false;
+    m_isConnectedToNetwork = false;
+    m_missedConnectionsToServer = 0;
+    m_currentServerURL = _serverURLS;
 }
 
 networking::~networking(void)
 {
 }
 
+//
+// Advances the current server url so that the esp can pole multiple servers
+// I would like to replace this with bonjor.  But until then I will just
+// list out all possible urls.
+//
+char *networking::ChangeServer()
+{
+    m_currentServerURL += 1;
+    if(*m_currentServerURL == NULL)
+        m_currentServerURL = _serverURLS;
+    return *m_currentServerURL;
+}
+
+//
+// Returns url based on "current server" and path parameter
+char *networking::GetServerUrl(char *buffer, const char *path)
+{
+    sprintf(buffer, "%s%s", *m_currentServerURL, path);
+    return buffer;
+}
 
 //
 // Begins connection to wifi network
 //
 bool networking::ConnectToNetwork()
 {
-    SerialPrintLn("ConnectToWIFI Startup");
     SerialPrint("Connecting To:  ");
     SerialPrintLn(ssid);
     _wifiMulti.addAP(ssid, password);
@@ -78,56 +108,133 @@ bool networking::ConnectToMindControl(pNetworkEvent networkEventHandler)
     // Wait for connection
     if (_wifiMulti.run() == WL_CONNECTED) 
     {
-        if (!m_isConnected) 
+        if (!m_isConnectedToNetwork) 
     		{
             SerialPrint("Connected to:   ");
             SerialPrintLn(ssid);
             SerialPrint("IP address:  ");
-            SerialPrintLn(WiFi.localIP().toString().c_str()); //IP address assigned to your ESP
-            m_isConnected = true;
+            SerialPrintLn(WiFi.localIP().toString().c_str());
+            m_isConnectedToNetwork = true;
+            m_missedConnectionsToServer = 1;
         }
-        else 
+
+        // try to connect to server.  If fail then increase missed count. 
+        // Missed count will eventually signal calling routine that connection to server is failing.
+        if(GetServerCommand(networkEventHandler))
         {
-            JsonObject *root = Get(url);
-            if(root)
-            {      
-                // handle any events/state changes in control message.
-                for(JsonObject::iterator it=root->begin(); it!=root->end(); ++it)
-                {
-                    if (it->value.is<char*>())
-                    {
-                        const char *value = it->value;
-                        if(*value != '\0')
-                        {
-                          networkEventHandler(it->key, value);
-                        }
-                        else
-                        {
-                          SerialPrint("Skipped: ");
-                          SerialPrintLn(it->key);
-                        }
-                    }
-                }       
-            }
+              if(m_missedConnectionsToServer > 0)
+              {
+                m_missedConnectionsToServer = 0;
+                sprintf(_buffer, "ReConnected To Server: %s", GetServerUrl(_buffer2, ""), m_missedConnectionsToServer);
+                SerialPrintLn(_buffer);   
+              }
         }
+        else
+        {
+             m_missedConnectionsToServer += 1;    
+             sprintf(_buffer, "Missed Connection To Server.  Count: %d", m_missedConnectionsToServer);
+             SerialPrintLn(_buffer);   
+             // switch servers... allows for multiple servers (until Bonjour works!) 
+             ChangeServer();         
+        }
+        return (m_missedConnectionsToServer <= _serverMissMax);
     }
   	else
   	{
   		// handle reconnection here.
-  		m_isConnected = false;
+  		m_isConnectedToNetwork = false;
   	}
-	  return m_isConnected;
+	  return m_isConnectedToNetwork;
+}
+
+// http://127.0.0.1:5000/connect?mac=<mac address>
+bool networking::GetServerCommand(pNetworkEvent networkEventHandler)
+{
+    // form full get request (including mac address)
+    char *url = GetServerUrl(_buffer2, _connect_path);
+    sprintf(_buffer, "%s?%s=%s", url, _mac_key, WiFi.macAddress().c_str());
+    
+    // do get request...
+    HTTPClient http;
+    http.begin(_buffer);
+    int httpCode = http.GET();
+    if(httpCode != HTTP_CODE_OK)
+    {
+        sprintf(_buffer,"HTTP GET failed, error: %s\n", http.errorToString(httpCode).c_str());
+        SerialPrintLn(_buffer);   
+        return false;
+    }      
+
+    // wait for and get return payload
+    String payload = http.getString();
+    if(payload.length() == 0)
+    {
+          http.end();
+          return false;    
+    }
+    http.end(); 
+    
+    SerialPrintLn(payload.c_str());       
+    // deserialize the json
+    StaticJsonBuffer<1024> jsonBuffer2;
+    JsonObject &root = jsonBuffer2.parseObject(payload.c_str());
+
+    if(!root.success())
+    {
+        SerialPrintLn("ParseReturn Failed"); 
+        return false;
+    }      
+     
+    // handle any events/state changes in control message.
+    for(JsonObject::iterator it=root.begin(); it!=root.end(); ++it)
+    {
+        SerialPrintLn(it->key);  
+         
+        if (it->value.is<char*>())
+        {  
+            const char *value = it->value;
+            if(*value != '\0')
+            {
+              networkEventHandler(it->key, value);
+
+            }
+            else
+            {
+              //SerialPrint("Skipped: ");
+              //SerialPrintLn(it->key);
+            }                                   
+        }
+        else
+        {
+            //SerialPrintLn("Not a String");
+        }                      
+    } 
+        
+    
+    return true;
 }
 
 // Note "levelName" is restricted to whatever server defines as level names
 bool networking::PostLog(const char *level, const char *message)
 {
     HTTPClient http;
-    _ClearJSONBuffer();
-    JsonObject& root = _jsonBuffer.createObject();
+    char *url = GetServerUrl(_buffer2, _log_path);
+    StaticJsonBuffer<1024> jsonBuffer;
+    JsonObject& root = jsonBuffer.createObject();
     root["levelname"] = level;
-    root["message"] = message;
-    Post(log_url, root);
+    root["message"] = message;  
+    Post(url, root);
+}
+
+// Publishes a message to the server (other esps should subscribe to this)
+bool networking::PostPublish(const char *message)
+{
+    HTTPClient http;
+    char *url = GetServerUrl(_buffer2, _publish_path);
+    StaticJsonBuffer<1024> jsonBuffer;
+    JsonObject& root = jsonBuffer.createObject();
+    root["message"] = message;   
+    Post(url, root);
 }
 
 
@@ -135,28 +242,6 @@ bool networking::PostLog(const char *level, const char *message)
 bool networking::PostLog(LogLevelType level, String message)
 {
     PostLog(_logLevelnames[level], message.c_str());
-}
-
-
-JsonObject *networking::Get(const char *url)
-{
-    HTTPClient http;
-    JsonObject *root = NULL;
-    http.begin(url);
-    int httpCode = http.GET();
-    if(httpCode == HTTP_CODE_OK)
-    {
-        root = ParseReturn(http);
-    }
-    else
-    {
-#ifdef DEBUG_MODE
-      char buffer[256];
-      sprintf(buffer,"HTTP GET failed, error: %s\n", http.errorToString(httpCode).c_str());
-      SerialPrintLn(buffer); 
-#endif    
-    }  
-    return root;
 }
 
 bool networking::Post(const char *url, const char *message)
@@ -180,32 +265,6 @@ bool networking::Post(const char *url, JsonObject& root)
       //Serial.println(httpCode);   //Print HTTP return code
       //Serial.println(payload);    //Print request response payload
       http.end();  //Close connection 
-}
-
-// Deserialize a returned json document
-JsonObject *networking::ParseReturn(HTTPClient &http)
-{
-    String payload = http.getString();
-    JsonObject *root = NULL;
-    if(payload.length() > 0)
-    {
-      SerialPrintLn(payload.c_str());
-      _ClearJSONBuffer();
-      root = &_jsonBuffer.parseObject(payload.c_str());
-      if(!root->success())
-      {
-          root = NULL;
-          SerialPrintLn("ParseReturn Failed"); 
-      }
-    }
-    return root;
-}
-
-// Resets allocation in json buffer.  
-// Caution... any references (roots) associated with this buffer will be dereferenced!
-static void _ClearJSONBuffer()
-{
-  _jsonBuffer.clear();
 }
 
 // singleton..

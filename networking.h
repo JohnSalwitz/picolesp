@@ -28,14 +28,19 @@ public:
 
   bool        PostLog(const char *level, const char *message);
   bool        PostLog(LogLevelType level, String message);
-  
-  JsonObject  *Get(const char *url);
+  bool        PostPublish(const char *message);
+    
   bool        Post(const char *url, const char *message);
   bool        Post(const char *url, JsonObject& root);
 
 private:
-  JsonObject *ParseReturn(HTTPClient &http);
-	bool        m_isConnected;
+  bool        GetServerCommand(pNetworkEvent networkEventHandler);
+  char        *ChangeServer();
+  char        *GetServerUrl(char *buffer, const char *path);
+  
+  char        **m_currentServerURL;
+	bool        m_isConnectedToNetwork;
+  int         m_missedConnectionsToServer;
 };
 
 extern networking NetworkHandler;
