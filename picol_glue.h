@@ -10,18 +10,18 @@ class picolInterp;
 	#include "WProgram.h"
 #endif
 
-
 class PicolGlueClass
 {
 
 public:
-	void setup();
-	void loop(int deltaTime);
+	void setup(const char *defaultBackgroundScript);
+	bool loop(int deltaTime);
+  void p_delay(int milliSeconds);
   
   void set_background_script(const char *newScript);
   void set_foreground_script(const char *newScript);
-  void p_delay(int milliSeconds);
-
+  bool check_foreground_script() {return _foregroundScript[0] != '\0';}   // returns true if foreground script is running
+  
 private:
   void    _resetState();
  

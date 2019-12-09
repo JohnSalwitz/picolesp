@@ -1,27 +1,29 @@
-// 
-// 
-// 
-
 #include "debug2.h"
 
 #if defined(ARDUINO) && ARDUINO >= 100
   #include "arduino.h"
 #else
-  #include "WProgram.h"
+  #include "WProgram.h
 #endif
 
+#ifdef DEBUG_MODE
 void SerialPrint(const char *str)
 {
-    str = str;
-#ifdef DEBUG_MODE
     Serial.print(str); 
-#endif
+    Serial.flush();  
 }
 
 void SerialPrintLn(const char *str)
 {
-    str = str;
-#ifdef DEBUG_MODE
     Serial.println(str);
-#endif
+    Serial.flush();  
 }
+#else
+void SerialPrint(const char *)
+{
+}
+
+void SerialPrintLn(const char *)
+{
+}
+#endif

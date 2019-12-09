@@ -34,7 +34,8 @@ static const char * _mac_key = "mac";
 
 static char *_serverURLS[] =
 {
-   "http://192.168.1.121:5000/",
+   "http://192.168.1.126:5000//",
+   //"http://192.168.1.121:5000/",
    "http://192.168.1.205:5000/",
    NULL
 };
@@ -132,7 +133,7 @@ bool networking::ConnectToMindControl(pNetworkEvent networkEventHandler)
         else
         {
              m_missedConnectionsToServer += 1;    
-             sprintf(_buffer, "Missed Connection To Server.  Count: %d", m_missedConnectionsToServer);
+             sprintf(_buffer, "Missed Connection To Server.  Server: %s Count: %d", GetServerUrl(_buffer2, ""), m_missedConnectionsToServer);
              SerialPrintLn(_buffer);   
              // switch servers... allows for multiple servers (until Bonjour works!) 
              ChangeServer();         

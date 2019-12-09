@@ -2,7 +2,9 @@
 
 #include "debug2.h"
 #include "picol_glue.h"
-#include "networking.h"
+#include "led_status.h"
+#include "logger.h"
+#include "settings.h"
 
 #define PICOL_CONFIGURATION
 #define PICOL_MAX_STR        256
@@ -27,8 +29,8 @@
 #define PICOL_FEATURE_INTERP    0
 #define PICOL_FEATURE_IO        0
 #define PICOL_FEATURE_PUTS      1
-#define PICOL_FEATUER_DEBUG		  0
-#define PICOL_FEATURE_TIMING	  0
+#define PICOL_FEATUER_DEBUG      0
+#define PICOL_FEATURE_TIMING    0
 #define PICOL_REENTRANT         1
 
 
@@ -37,7 +39,6 @@ void exit (int status);
 
 // the interpreter...
 #include "picol.h"
-#include "background_scripts.h"
 
 // tcl binding to Arduino functions
 COMMAND(sleep);
@@ -49,6 +50,9 @@ COMMAND(digitalRead);
 #ifdef PICOL_LED_PIN
 COMMAND(setLED);
 #endif
+#ifdef LED_STATUS
+COMMAND(setLEDRate);
+#endif
 #ifdef PICOL_INPUT_PIN
 COMMAND(readPin);
 #endif
@@ -59,17 +63,18 @@ COMMAND(log);
 COMMAND(publish);
 
 #ifdef PICOL_RELAY
+#define SERIAL_BAUDRATE  9600
 static byte relON[] = {0xA0, 0x01, 0x01, 0xA2};  //Hex command to send to serial for open relay
 static byte relOFF[] = {0xA0, 0x01, 0x00, 0xA1}; //Hex command to send to serial for close relay
 #endif
 
-void PicolGlueClass::setup()
+void PicolGlueClass::setup(const char *defaultBackgroundScript)
 {
-  	_interpreter = picolCreateInterp();
+    _interpreter = picolCreateInterp();
     _resetState();
  
-  	// used by tcl in idle mode
-  	picolSetIntVar(_interpreter, "idleTimer", 0);
+    // used by tcl in idle mode
+    picolSetIntVar(_interpreter, "idleTimer", 0);
   
     picolRegisterCmd(_interpreter, "sleep", picol_sleep, NULL);
     picolRegisterCmd(_interpreter, "sleepsec", picol_sleepSec, NULL);
@@ -81,7 +86,10 @@ void PicolGlueClass::setup()
     
 #ifdef PICOL_LED_PIN
     picolRegisterCmd(_interpreter, "setled", picol_setLED, NULL);
-#endif   
+#endif
+#ifdef LED_STATUS
+    picolRegisterCmd(_interpreter, "setledrate", picol_setLEDRate, NULL);
+#endif
 #ifdef PICOL_INPUT_PIN 
     picolRegisterCmd(_interpreter, "readpin", picol_readPin, NULL);
 #endif 
@@ -108,17 +116,20 @@ void PicolGlueClass::setup()
     pinMode(PICOL_LED_PIN, OUTPUT);
 #endif
     
-    set_background_script(default_backgroundScript);
+    set_background_script(defaultBackgroundScript);
     set_foreground_script("");
     
-  	SerialPrintLn("Interpreter Setup Completed");
+    SerialPrintLn("Interpreter Setup Completed");
 }
 
-void PicolGlueClass::loop(int deltaTime)
+// returns if normal processing.  (False if an error)
+bool PicolGlueClass::loop(int deltaTime)
 {
+   bool isOK = true;
+    
   if(_sleepTime == 0)
   {
-    char *script = (*_foregroundScript != '\0') ? (char *)_foregroundScript : (char *)_backgroundScript;
+    char *script = (this->check_foreground_script()) ? (char *)_foregroundScript : (char *)_backgroundScript;
     int rc = picolEval2(_interpreter, script, _picolMode);
 
     // foreground script is one time only
@@ -135,7 +146,8 @@ void PicolGlueClass::loop(int deltaTime)
          break; 
       default:
          SerialPrintLn("PICOL ERROR!");
-         NetworkHandler.PostLog("error", "Picol Error");    
+         logger_post("error", "Picol Error");   
+         isOK = false;
          break;         
     }
   }
@@ -145,17 +157,25 @@ void PicolGlueClass::loop(int deltaTime)
   }
   
   picolSetIntVar(_interpreter, "idleTimer", 0);
+  return isOK;
 }
 
 void PicolGlueClass::set_background_script(const char *newScript)
 {
-    strncpy(_backgroundScript, newScript, sizeof(_backgroundScript));
-    set_foreground_script("");       // override foreground (and reset state)
+    if(newScript != NULL)
+    {
+      strncpy(_backgroundScript, newScript, sizeof(_backgroundScript));
+      set_foreground_script("");   // Stop foreground (and reset state)  
+    }
 }
 
 void PicolGlueClass::set_foreground_script(const char *newScript)
 {
-    strncpy(_foregroundScript, newScript, sizeof(_foregroundScript));
+    if(newScript != NULL)
+        strncpy(_foregroundScript, newScript, sizeof(_foregroundScript));
+    else
+       _foregroundScript[0] = '\0';
+       
     // act on this change now.
    _resetState();
 }
@@ -174,32 +194,32 @@ void PicolGlueClass::p_delay(int milliSeconds)
 // sleep(milliseconds)
 COMMAND(sleep)
 {
-	/* This is an example of how to wrap int functions. */
-	int milliSeconds;
-	ARITY2(argc == 2, "sleep");
-	SCAN_INT(milliSeconds, argv[1]);
+  /* This is an example of how to wrap int functions. */
+  int milliSeconds;
+  ARITY2(argc == 2, "sleep");
+  SCAN_INT(milliSeconds, argv[1]);
   PicolGlue.p_delay(milliSeconds);
-	return PICOL_YIELD;
+  return PICOL_YIELD;
 }
 
 // sleepsec(seconds)
 COMMAND(sleepSec)
 {
-	int seconds;
-	ARITY2(argc == 2, "sleepsec");
-	SCAN_INT(seconds, argv[1]);
+  int seconds;
+  ARITY2(argc == 2, "sleepsec");
+  SCAN_INT(seconds, argv[1]);
   PicolGlue.p_delay(seconds * 1000);
-	return PICOL_YIELD;
+  return PICOL_YIELD;
 }
 
 // sleepmin(minutes)
 COMMAND(sleepMin)
 {
-	int minutes;
-	ARITY2(argc == 2, "sleepmin");
-	SCAN_INT(minutes, argv[1]);
+  int minutes;
+  ARITY2(argc == 2, "sleepmin");
+  SCAN_INT(minutes, argv[1]);
   PicolGlue.p_delay(minutes * 1000 * 60);
-	return PICOL_YIELD;
+  return PICOL_YIELD;
 }
 
 // digitalWrite(pin, state)
@@ -217,21 +237,21 @@ COMMAND(setPinMode)
 // digitalWrite(pin, state)
 COMMAND(digitalWrite)
 {
-	uint8_t pin;
-	uint8_t state;
-	ARITY2(argc == 3, "digitalwrite");
-	SCAN_INT(pin, argv[1]);
-	SCAN_INT(state, argv[2]);
-	digitalWrite(pin, state);
-	return PICOL_OK;
+  uint8_t pin;
+  uint8_t state;
+  ARITY2(argc == 3, "digitalwrite");
+  SCAN_INT(pin, argv[1]);
+  SCAN_INT(state, argv[2]);
+  digitalWrite(pin, state);
+  return PICOL_OK;
 }
 
 // digitalRead(pin)
 COMMAND(digitalRead)
 {
-	uint8_t pin;
-	ARITY2(argc == 2, "digitalread");
-	SCAN_INT(pin, argv[1]);
+  uint8_t pin;
+  ARITY2(argc == 2, "digitalread");
+  SCAN_INT(pin, argv[1]);
   return picolSetIntResult(interp, digitalRead(pin));
 }
 
@@ -246,6 +266,18 @@ COMMAND(setLED)
       digitalWrite(PICOL_LED_PIN, HIGH); 
   else
       digitalWrite(PICOL_LED_PIN, LOW); 
+  return PICOL_OK;
+}
+#endif
+
+#ifdef LED_STATUS
+// setLEDRate(state)
+COMMAND(setLEDRate)
+{
+  uint8_t rate;
+  ARITY2(argc == 2, "setLEDRate");
+  SCAN_INT(rate, argv[1]);
+  ledStatus_setRate(rate);
   return PICOL_OK;
 }
 #endif
@@ -280,7 +312,7 @@ COMMAND(setRelay)
 COMMAND(log)
 {
     ARITY2(argc == 3, "log level msg");
-    NetworkHandler.PostLog(argv[1], argv[2]);
+    logger_post(argv[1], argv[2]);
     return PICOL_OK;
 }
 
@@ -288,7 +320,7 @@ COMMAND(log)
 COMMAND(publish)
 {
     ARITY2(argc == 2, "publish msg");
-    NetworkHandler.PostPublish(argv[1]);
+    //NetworkHandler.PostPublish(argv[1]);
     return PICOL_OK;
 }
 
@@ -298,7 +330,7 @@ COMMAND(publish)
  */
 void exit (int status)
 {
-	while(1) {}
+  while(1) {}
 }
 
 // Singleton
