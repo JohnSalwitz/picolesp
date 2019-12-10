@@ -22,7 +22,7 @@ static const char *default_backgroundScript =
     
 //#define PICOL_LED_PIN   1
 //#define PICOL_INPUT_PIN 1
-#define PICOL_RELAY
+//#define PICOL_RELAY
 //--------------------------------------------------------------------------
 #endif
 
@@ -35,13 +35,13 @@ static const char *default_backgroundScript =
     "setrelay 0\n"
     "sleepmin 22\n"
     "setrelay 1\n"
-    "setledrate 120\n"
+    "setledrate 240\n"
     "sleepmin 8\n";
 
 static const char *cat_detected_script =
     "log info \"Fan is turning on for the cat\"\n"
     "setrelay 1\n"
-    "setledrate 120\n"
+    "setledrate 240\n"
     "sleepmin 10\n"
     "setrelay 0\n";
     
@@ -70,7 +70,7 @@ static const char *default_backgroundScript =
 
 // Fast blinking led means there was an error
 static const char *error_script =
-    "setledrate 3000\n"
+    "setledrate 600\n"
     "sleepsec 10\n";
 
 #endif

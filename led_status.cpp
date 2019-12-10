@@ -10,8 +10,8 @@ static int _sleepTime = 0;
 
 void ledStatus_setup() 
 {  
-    //pinMode(LED_STATUS_PIN, OUTPUT);
-    //digitalWrite(LED_STATUS_PIN, LOW);
+    pinMode(LED_STATUS_PIN, OUTPUT);
+    digitalWrite(LED_STATUS_PIN, LOW);
     ledStatus_setRate(60);
 }
 
@@ -34,8 +34,8 @@ void ledStatus_loop(int deltaTime)
   {  
       if(_sleepTimer == 0)
       {
-        //int state = digitalRead(LED_STATUS_PIN); 
-        //digitalWrite(LED_STATUS_PIN, !state);  
+        int state = digitalRead(LED_STATUS_PIN); 
+        digitalWrite(LED_STATUS_PIN, !state);  
         _sleepTimer = _sleepTime;
       }
       else

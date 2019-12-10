@@ -5,6 +5,7 @@
 #include "led_status.h"
 #include "logger.h"
 #include "settings.h"
+#include "esp_relay.h"
 
 #define PICOL_CONFIGURATION
 #define PICOL_MAX_STR        256
@@ -62,11 +63,6 @@ COMMAND(setRelay);
 COMMAND(log);
 COMMAND(publish);
 
-#ifdef PICOL_RELAY
-#define SERIAL_BAUDRATE  9600
-static byte relON[] = {0xA0, 0x01, 0x01, 0xA2};  //Hex command to send to serial for open relay
-static byte relOFF[] = {0xA0, 0x01, 0x00, 0xA1}; //Hex command to send to serial for close relay
-#endif
 
 void PicolGlueClass::setup(const char *defaultBackgroundScript)
 {
@@ -299,10 +295,7 @@ COMMAND(setRelay)
   uint8_t state;
   ARITY2(argc == 2, "setRelay");
   SCAN_INT(state, argv[1]);
-  if(state == 0)
-      Serial.write(relOFF, sizeof(relOFF));      // turns the relay OFF
-  else
-      Serial.write(relON, sizeof(relON));       // turns the relay ON
+  espRelay_setState(state);
   return PICOL_OK;
 }
 #endif
