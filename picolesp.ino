@@ -1,4 +1,4 @@
-
+LCD
 #if defined(ARDUINO) && ARDUINO >= 100
   #include "arduino.h"
 #else
@@ -20,24 +20,30 @@ static long _picolTimer;
 void setup()
 {
   const char *backgroundScript;
-  
+
+#ifdef ESP32 
+  Serial.begin(115200);
+#else
   Serial.begin(9600);
+#endif
   
   SerialPrintLn("MQQ Init...");
+
   MQQ.Init(ESP_NAME);
   logger_post(LogLevelType::info, "Connected"); 
 
+  
   SerialPrintLn("SubscriptionsInit...");
   SubscriptionsInit();
 
   // led blinker...
   SerialPrintLn("ledStatus_setup...");
   ledStatus_setup(); 
-  
+
   SerialPrintLn("StaticStorage_Init...");
   StaticStorage_Init(default_backgroundScript);
   backgroundScript = StaticStorage_Read();
-    
+
 	SerialPrintLn("Setup Picol With Default Script: ");
   SerialPrintLn("-------------------------------------");
   SerialPrintLn(backgroundScript);
@@ -50,7 +56,7 @@ void setup()
 void loop()
 {
   long current_time = (long)millis();
-  
+
   // run tcl at "frame rate"
   if((_picolTimer - current_time) <= 0)
   {  

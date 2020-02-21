@@ -57,9 +57,10 @@ COMMAND(setLEDRate);
 #ifdef PICOL_INPUT_PIN
 COMMAND(readPin);
 #endif
-#ifdef PICOL_RELAY
+#if defined(PICOL_RELAY_SERIAL) || defined(PICOL_RELAY_PIN)
 COMMAND(setRelay);
 #endif
+
 COMMAND(log);
 COMMAND(publish);
 
@@ -89,7 +90,7 @@ void PicolGlueClass::setup(const char *defaultBackgroundScript)
 #ifdef PICOL_INPUT_PIN 
     picolRegisterCmd(_interpreter, "readpin", picol_readPin, NULL);
 #endif 
-#ifdef PICOL_RELAY 
+#if defined(PICOL_RELAY_SERIAL) || defined(PICOL_RELAY_PIN)
     picolRegisterCmd(_interpreter, "setrelay", picol_setRelay, NULL);
 #endif 
 
@@ -111,7 +112,12 @@ void PicolGlueClass::setup(const char *defaultBackgroundScript)
     picolSetIntVar(_interpreter, "ledpin", PICOL_LED_PIN);
     pinMode(PICOL_LED_PIN, OUTPUT);
 #endif
-    
+
+#ifdef PICOL_RELAY_PIN
+    picolSetIntVar(_interpreter, "relaypin", PICOL_RELAY_PIN);
+    pinMode(PICOL_RELAY_PIN, OUTPUT);
+#endif
+
     set_background_script(defaultBackgroundScript);
     set_foreground_script("");
     
@@ -283,12 +289,14 @@ COMMAND(setLEDRate)
 COMMAND(readPin)
 {
   ARITY2(argc == 1, "readPin");
-  return picolSetIntResult(interp, digitalRead(PICOL_INPUT_PIN));  
+  int i = digitalRead(PICOL_INPUT_PIN);
+  Serial.println(i);
+  return picolSetIntResult(interp, i);  
 }
 #endif
 
 
-#ifdef PICOL_RELAY
+#ifdef PICOL_RELAY_SERIAL
 // setRelay(state)
 COMMAND(setRelay)
 {
@@ -299,6 +307,22 @@ COMMAND(setRelay)
   return PICOL_OK;
 }
 #endif
+
+#ifdef PICOL_RELAY_PIN
+// setRelay(state)
+COMMAND(setRelay)
+{
+  uint8_t state;
+  ARITY2(argc == 2, "setRelay");
+  SCAN_INT(state, argv[1]);
+  if(state == 0)
+      digitalWrite(PICOL_RELAY_PIN, LOW); 
+  else
+      digitalWrite(PICOL_RELAY_PIN, HIGH); 
+  return PICOL_OK;
+}
+#endif
+
 
 // to do...protect buffers!
 // log(level, message)

@@ -5,7 +5,12 @@
   #include "WProgram.h"
 #endif
 
+#ifdef ESP32 
+#include "EEPROM.h"
+#else
 #include <ESP_EEPROM.h> 
+#endif
+
 #include "version.h"
 #include "debug2.h"
 #include "logger.h"

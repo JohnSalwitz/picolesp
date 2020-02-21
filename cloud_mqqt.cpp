@@ -1,4 +1,10 @@
+
+#ifdef ESP32 
+#include <WiFi.h>
+#else
 #include <ESP8266WiFi.h>
+#endif
+
 #include <PubSubClient.h>
 #include "cloud_mqqt.h"
 #include "debug2.h"

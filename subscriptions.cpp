@@ -42,7 +42,17 @@ static void _handleCatFanRun(const char *)
         PicolGlue.set_foreground_script(cat_detected_script); 
    else
         logger_post(LogLevelType::info, "Cat Script Already Running");   
-   return;
+}
+#endif
+
+
+#ifdef SHOP_FAN
+static void _handleShopFanRun(const char *)
+{
+   if(!PicolGlue.check_foreground_script())
+      logger_post(LogLevelType::info, "Restarting Shop Fan");   
+    
+   PicolGlue.set_foreground_script(tool_detected_script); 
 }
 #endif
 
@@ -70,6 +80,9 @@ SubscriptionDef _Subscriptions[] =
   {NAMED_TOPIC("background_script"), _handleSetBackground},
 #ifdef CAT_FAN
   {GENERIC_TOPIC("cat_detected"), _handleCatFanRun},
+#endif
+#ifdef SHOP_FAN
+  {GENERIC_TOPIC("tool_detected"), _handleShopFanRun},
 #endif
   {NULL, NULL}
 };
