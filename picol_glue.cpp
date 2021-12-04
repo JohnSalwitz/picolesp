@@ -121,7 +121,7 @@ void PicolGlueClass::setup(const char *defaultBackgroundScript)
     set_background_script(defaultBackgroundScript);
     set_foreground_script("");
     
-    SerialPrintLn("Interpreter Setup Completed");
+    SerialPrintLn("PicolGlueClass::setup", "Interpreter Setup Completed");
 }
 
 // returns if normal processing.  (False if an error)
@@ -147,7 +147,7 @@ bool PicolGlueClass::loop(int deltaTime)
          _picolMode = 2;                    // will reenter same script next iteration.
          break; 
       default:
-         SerialPrintLn("PICOL ERROR!");
+         SerialPrintLn("PicolGlueClass::loop", "PICOL ERROR!");
          logger_post("error", "Picol Error");   
          isOK = false;
          break;         
@@ -290,7 +290,6 @@ COMMAND(readPin)
 {
   ARITY2(argc == 1, "readPin");
   int i = digitalRead(PICOL_INPUT_PIN);
-  Serial.println(i);
   return picolSetIntResult(interp, i);  
 }
 #endif

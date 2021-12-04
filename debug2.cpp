@@ -7,23 +7,27 @@
 #endif
 
 #ifdef DEBUG_MODE
-void SerialPrint(const char *str)
+void SerialPrint(const char *functionName, const char *str)
 {
+    Serial.print(functionName);
+    Serial.print(" -- ");
     Serial.print(str); 
     Serial.flush();  
 }
 
-void SerialPrintLn(const char *str)
+void SerialPrintLn(const char *functionName, const char *str)
 {
+    Serial.print(functionName);
+    Serial.print(" -- ");
     Serial.println(str);
     Serial.flush();  
 }
 #else
-void SerialPrint(const char *)
+void SerialPrint(const char *functionName, const char *str)
 {
 }
 
-void SerialPrintLn(const char *)
+void SerialPrintLn(const char *functionName, const char *str)
 {
 }
 #endif

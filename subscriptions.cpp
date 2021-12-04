@@ -5,6 +5,7 @@
 #include "logger.h"
 #include "settings.h"
 #include "subscriptions.h"
+#include "clock_timer.h"
 
 
 static void _handleReset(const char *contents)
@@ -17,9 +18,9 @@ static void _handleReset(const char *contents)
 
 static void _handlePing(const char *contents)
 { 
-  char buffer[256];
-  sprintf(buffer, "Up: %s", logger_uptime());
-  SerialPrintLn(buffer);
+  char buffer[256],buffer2[256];
+  sprintf(buffer, "Up: %s", clockTimer_FormatUpTime(buffer2));
+  SerialPrintLn("_handlePing", buffer);
   logger_post(LogLevelType::info, buffer); 
 }
 
@@ -106,18 +107,18 @@ static void _SubscriptionsCallback(char* topic, uint8_t* payload, unsigned int l
     if(strstr(topic_buffer, subscription->topic) != NULL)
     {  
         char buffer[128];               
-        SerialPrint("Contents: ");
-        SerialPrintLn(contents);     
+        SerialPrint("_SubscriptionsCallback", "Contents: ");
+        SerialPrintLn("_SubscriptionsCallback", contents);
         sprintf(buffer, "Client Handling Topic: %s", subscription->topic);
-        SerialPrintLn(buffer);
-        logger_post(LogLevelType::info, buffer);   
+        SerialPrintLn("_SubscriptionsCallback", buffer);
+        logger_post(LogLevelType::debug, buffer);   
         subscription->handler(contents);
         return;
     }
   }
 
   logger_post(LogLevelType::info, "Ignored Command");   
-  SerialPrintLn("Command Ignored By ESPP Handler");
+  SerialPrintLn("_SubscriptionsCallback","Command Ignored By ESPP Handler");
 }
 
 // informs mqqt broker of the subscriptions needed based on above list.
@@ -125,8 +126,8 @@ void SubscriptionsInit()
 {
   for(SubscriptionDef *subscription = _Subscriptions; subscription->topic != NULL; subscription += 1)
   {
-      SerialPrint("Subscribe To: ");
-      SerialPrintLn(subscription->topic);
+      SerialPrint("SubscriptionsInit", "Subscribing To: ");
+      SerialPrintLn("", subscription->topic);
       MQQ.Subscribe(subscription->topic);
       delay(100);
   }

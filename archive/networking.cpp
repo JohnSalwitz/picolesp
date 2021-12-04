@@ -95,8 +95,8 @@ char *networking::GetServerUrl(char *buffer, const char *path)
 //
 bool networking::ConnectToNetwork()
 {
-    SerialPrint("Connecting To:  ");
-    SerialPrintLn(ssid);
+    SerialPrint("ConnectToNetwork", "Connecting To:  ");
+    SerialPrintLn("ConnectToNetwork", ssid);
     _wifiMulti.addAP(ssid, password);
 	  return true;
 }
@@ -111,10 +111,10 @@ bool networking::ConnectToMindControl(pNetworkEvent networkEventHandler)
     {
         if (!m_isConnectedToNetwork) 
     		{
-            SerialPrint("Connected to:   ");
-            SerialPrintLn(ssid);
-            SerialPrint("IP address:  ");
-            SerialPrintLn(WiFi.localIP().toString().c_str());
+            SerialPrint("ConnectToMindControl", "Connected to:   ");
+            SerialPrintLn("ConnectToMindControl",ssid);
+            SerialPrint("ConnectToMindControl","IP address:  ");
+            SerialPrintLn("ConnectToMindControl",WiFi.localIP().toString().c_str());
             m_isConnectedToNetwork = true;
             m_missedConnectionsToServer = 1;
         }
@@ -127,14 +127,14 @@ bool networking::ConnectToMindControl(pNetworkEvent networkEventHandler)
               {
                 m_missedConnectionsToServer = 0;
                 sprintf(_buffer, "ReConnected To Server: %s", GetServerUrl(_buffer2, ""), m_missedConnectionsToServer);
-                SerialPrintLn(_buffer);   
+                SerialPrintLn("networking::ConnectToMindControl", _buffer);
               }
         }
         else
         {
              m_missedConnectionsToServer += 1;    
              sprintf(_buffer, "Missed Connection To Server.  Server: %s Count: %d", GetServerUrl(_buffer2, ""), m_missedConnectionsToServer);
-             SerialPrintLn(_buffer);   
+             SerialPrintLn("networking::ConnectToMindControl",_buffer);
              // switch servers... allows for multiple servers (until Bonjour works!) 
              ChangeServer();         
         }
@@ -162,7 +162,7 @@ bool networking::GetServerCommand(pNetworkEvent networkEventHandler)
     if(httpCode != HTTP_CODE_OK)
     {
         sprintf(_buffer,"HTTP GET failed, error: %s\n", http.errorToString(httpCode).c_str());
-        SerialPrintLn(_buffer);   
+        SerialPrintLn("GetServerCommand", _buffer);
         return false;
     }      
 
@@ -182,14 +182,14 @@ bool networking::GetServerCommand(pNetworkEvent networkEventHandler)
 
     if(!root.success())
     {
-        SerialPrintLn("ParseReturn Failed"); 
+        SerialPrintLn("GetServerCommand","ParseReturn Failed");
         return false;
     }      
      
     // handle any events/state changes in control message.
     for(JsonObject::iterator it=root.begin(); it!=root.end(); ++it)
     {
-        SerialPrintLn(it->key);  
+        SerialPrintLn("GetServerCommand", it->key);
          
         if (it->value.is<char*>())
         {  

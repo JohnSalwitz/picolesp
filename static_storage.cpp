@@ -28,7 +28,7 @@ static char _payload[EEROM_SIZE-sizeof(_EEPromHeader)];
 // Reads from eerom.  If version # mismatch will use default payload and write eerom.
 bool StaticStorage_Init(const char *defaultPayload)
 {
-  SerialPrintLn("INIT");
+  SerialPrintLn("StaticStorage_Init", "INIT");
   
   // needed?
   memset(&_EEPromHeader,0,sizeof(EEPromHeader));
@@ -36,15 +36,15 @@ bool StaticStorage_Init(const char *defaultPayload)
   
   EEPROM.begin(EEROM_SIZE);
 
-      SerialPrintLn("BEGIN");
+  SerialPrintLn("StaticStorage_Init","BEGIN");
   // The begin() call is required to initialise the EEPROM library
   for(int i = 0;i < EEROM_TRIES;i++)
   {
       char buf[128];
-        SerialPrintLn("TRY");
+      SerialPrintLn("StaticStorage_Init","TRY");
       EEPROM.get(0, _EEPromHeader);
       sprintf(buf, "Read Version from EEPROM: %d",_EEPromHeader.versionNumber);
-      SerialPrintLn(buf);
+      SerialPrintLn("StaticStorage_Init", buf);
       logger_post(LogLevelType::info, buf);  
       
       // Check version match.  Otherwise... will init.
@@ -55,7 +55,7 @@ bool StaticStorage_Init(const char *defaultPayload)
           return true;
       }
 
-      SerialPrintLn("EEPROM Version Did Not Match... ReWriting ");    
+      SerialPrintLn("StaticStorage_Init","EEPROM Version Did Not Match... ReWriting ");
       logger_post(LogLevelType::info, "EEPROM Version Did Not Match... ReWriting ");    
       _EEPromHeader.versionNumber = BUILD_VERSION_CODE;
       StaticStorage_Write(defaultPayload);
@@ -82,13 +82,13 @@ bool StaticStorage_Write(const char *payLoad)
     bool ok = EEPROM.commit();
     if(!ok)
     {
-        SerialPrintLn("EEROM Commit failed");
+        SerialPrintLn("StaticStorage_Write", "EEROM Commit failed");
     }
     else
     {
       char buf[128];
       sprintf(buf, "Successful EEROM Write Payload Length (Bytes): %d",length);
-      SerialPrintLn(buf);
+      SerialPrintLn("StaticStorage_Write", buf);
       logger_post(LogLevelType::info, buf);   
     }
   

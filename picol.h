@@ -3720,6 +3720,7 @@ COMMAND(puts) {
     char buf[PICOL_MAX_STR];
     ARITY2(argc == 2 || argc == 3, "puts ?size?");
     sprintf(buf, "%s\n", argv[1]);
+        Serial.println("COMMAND1");
     Serial.println(buf);
     return PICOL_OK;
 }

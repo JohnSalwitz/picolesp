@@ -24,18 +24,18 @@ void MQQHandler::Init(const char * clientName) {
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
-        SerialPrintLn("Connecting to WiFi..");
+        SerialPrintLn("MQQHandler::Init", "Connecting to WiFi..");
     }
     
-    SerialPrintLn("Connected to the WiFi network");
+    SerialPrintLn("MQQHandler::Init", "Connected to the WiFi network");
     _client.setServer(mqttServer, mqttPort);
 
     while (!_client.connected()) {
         if (_client.connect(clientName, mqttUser, mqttPassword)) {
-            SerialPrintLn("Connected to MQTT");
+            SerialPrintLn("MQQHandler::Init", "Connected to MQTT");
         } else {
             sprintf(buf, "Failed To Connect To MQTT with State: %d", _client.state());
-            SerialPrint(buf);
+            SerialPrint("MQQHandler::Init", buf);
             delay(2000);
         }
     }

@@ -5,7 +5,7 @@
 
 #define DEBUG_MODE
 
-void SerialPrint(const char *str);
-void SerialPrintLn(const char *str);
+void SerialPrint(const char *functionName, const char *str);
+void SerialPrintLn(const char *functionName, const char *str);
 
 #endif

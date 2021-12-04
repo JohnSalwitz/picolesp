@@ -72,7 +72,7 @@ void PicolGlueClass::setup()
 
 	_activeScript = "puts {Hello, Idle And Wait}\nsleepsec 5";
 
-	SerialPrintLn("interp Setup Completed");
+	SerialPrintLn("PicolGlueClass::setup", "interp Setup Completed");
 }
 
 void PicolGlueClass::loop()
@@ -80,7 +80,7 @@ void PicolGlueClass::loop()
 	int rc = picolEval(_interpreter, (char *)_activeScript);
 	if (rc != PICOL_OK)
 	{
-		SerialPrintLn("PICOL ERROR!");
+		SerialPrintLn("PicolGlueClass::loop","PICOL ERROR!");
 	}
 	picolSetIntVar(_interpreter, "idleTimer", 0);
 }
